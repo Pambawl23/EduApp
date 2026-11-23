@@ -1,28 +1,26 @@
+import 'screens/gestion_des_cours.dart';
+import 'screens/gestion_des_cat_gories.dart';
+import 'screens/gestion_des_formations.dart';
+import 'screens/gestion_des_utilisateurs.dart';
+import 'screens/gestion_des_examens.dart';
+import 'screens/historique_des_notifications.dart';
+import 'screens/statistiques_performance.dart';
 import 'package:flutter/material.dart';
-//import 'screens/accueil.dart';
-//import 'screens/page_connexion.dart';
-//import 'screens/index_ecrans.dart';
-//import 'screens/nouvel_utilisateur.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'screens/accueil.dart';
 import 'screens/page_connexion.dart';
-import 'screens/page_inscription.dart';
-import 'screens/mot_de_passe_oublie.dart';
 import 'screens/tableau_de_bord.dart';
-import 'screens/statistiques.dart';
-import 'screens/activites_a_realiser.dart';
-import 'screens/progression.dart';
 import 'screens/catalogue.dart';
-import 'screens/recherche_filtre.dart';
-import 'screens/inscription_formation.dart';
-import 'screens/lire_cours.dart';
-import 'screens/passer_examen.dart';
-import 'screens/resultats.dart';
 import 'screens/notifications.dart';
 import 'screens/profil.dart';
-import 'screens/deconnexion.dart';
 
-void main() => runApp(const EduApp());
+void main() {
+  runApp(
+    const ProviderScope(
+      child: EduApp(),
+    ),
+  );
+}
 
 class EduApp extends StatelessWidget {
   const EduApp({super.key});
@@ -39,25 +37,21 @@ class EduApp extends StatelessWidget {
           seedColor: const Color(0xFF2F5094),
         ),
       ),
-
-      // Décommente UNE seule ligne à la fois :
-      home: const Catalogue(),
-      // home: const PageConnexion(),
-      // home: const PageInscription(),
-      // home: const MotDePasseOublie(),
-      // home: const TableauDeBord(),
-      // home: const Statistiques(),
-      // home: const ActivitesARealiser(),
-      // home: const Progression(),
-      // home: const Catalogue(),
-      // home: const RechercheFiltre(),
-      // home: const InscriptionFormation(),
-      // home: const LireCours(),
-      // home: const PasserExamen(),
-      // home: const Resultats(),
-      // home: const Notifications(),
-      // home: const Profil(),
-      // home: const Deconnexion(),
+      home: const PageConnexion(),
+      routes: {
+        '/accueil': (context) => const TableauDeBord(),
+        '/catalogue': (context) => const Catalogue(),
+        '/notifications': (context) => const Notifications(),
+        '/profil': (context) => const Profil(),
+        '/admin/accueil': (context) => const StatistiquesPerformance(),
+        '/admin/formations': (context) => const GestionDesFormations(),
+        '/admin/utilisateurs': (context) => const GestionDesUtilisateurs(),
+        '/admin/examens': (context) => const GestionDesExamens(),
+        '/admin/notifications': (context) => const HistoriqueDesNotifications(),
+        '/admin/cours': (context) => const GestionDesCours(),
+        '/admin/categories': (context) => const GestionDesCategories(),
+        '/admin/statistiques': (context) => const StatistiquesPerformance(),
+      },
     );
   }
 }

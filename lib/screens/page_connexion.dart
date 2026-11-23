@@ -1,12 +1,60 @@
-import 'package:flutter/material.dart';
 
-class PageConnexion extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../providers/auth_provider.dart';
+import 'tableau_de_bord.dart';
+import 'gestion_des_utilisateurs.dart';
+
+class PageConnexion extends ConsumerStatefulWidget {
   const PageConnexion({super.key});
 
+  @override
+  ConsumerState<PageConnexion> createState() => _PageConnexionState();
+}
+
+class _PageConnexionState extends ConsumerState<PageConnexion> {
   static const Color primary = Color(0xFF2F5094);
   static const Color labelGrey = Color(0xFF64748B);
   static const Color border = Color(0xFFC3CFE2);
   static const Color hintGrey = Color(0xFF94A3B8);
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  UserRole selectedRole = UserRole.apprenant;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void seConnecter() {
+    final email = emailController.text.trim();
+    final password = passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Veuillez remplir tous les champs.'),
+        ),
+      );
+      return;
+    }
+
+    ref.read(authProvider.notifier).login(email, selectedRole);
+
+    final destination = selectedRole == UserRole.apprenant
+        ? const TableauDeBord()
+        : const GestionDesUtilisateurs();
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => destination),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,42 +70,64 @@ class PageConnexion extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const _FieldLabel('E-MAIL'),
               const SizedBox(height: 8),
-              const _StaticField(
-                text: 'votre.email@domaine.com',
-                isHint: true,
+              TextField(
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: _decoration('votre.email@domaine.com'),
               ),
               const SizedBox(height: 20),
               const _FieldLabel('MOT DE PASSE'),
               const SizedBox(height: 8),
-              const _StaticField(text: '••••••••', isHint: false),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: _decoration('Votre mot de passe'),
+              ),
+              const SizedBox(height: 20),
+              const _FieldLabel('TYPE DE COMPTE'),
+              const SizedBox(height: 8),
+              DropdownButtonFormField<UserRole>(
+                value: selectedRole,
+                decoration: _decoration('Choisir un rôle'),
+                items: const [
+                  DropdownMenuItem(
+                    value: UserRole.apprenant,
+                    child: Text('Apprenant'),
+                  ),
+                  DropdownMenuItem(
+                    value: UserRole.administrateur,
+                    child: Text('Administrateur'),
+                  ),
+                ],
+                onChanged: (role) {
+                  if (role != null) {
+                    setState(() => selectedRole = role);
+                  }
+                },
+              ),
               const SizedBox(height: 16),
               Align(
                 alignment: Alignment.centerRight,
-                child: GestureDetector(
-                  onTap: () {},
+                child: TextButton(
+                  onPressed: () {},
                   child: const Text(
                     'Mot de passe oublié ?',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: primary,
-                      decoration: TextDecoration.underline,
-                      decorationColor: primary,
-                    ),
+                    style: TextStyle(color: primary),
                   ),
                 ),
               ),
-              const Spacer(),
+              const SizedBox(height: 50),
               SizedBox(
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: seConnecter,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primary,
                     foregroundColor: Colors.white,
@@ -97,10 +167,36 @@ class PageConnexion extends StatelessWidget {
       ),
     );
   }
+
+  InputDecoration _decoration(String hint) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: const TextStyle(color: hintGrey),
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 14,
+        vertical: 16,
+      ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: border),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: border),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: primary, width: 1.5),
+      ),
+    );
+  }
 }
 
 class _FieldLabel extends StatelessWidget {
   final String text;
+
   const _FieldLabel(this.text);
 
   @override
@@ -110,37 +206,8 @@ class _FieldLabel extends StatelessWidget {
       style: const TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w700,
-        color: PageConnexion.labelGrey,
+        color: _PageConnexionState.labelGrey,
         letterSpacing: 0.3,
-      ),
-    );
-  }
-}
-
-/// Champ statique (visuel uniquement, pas de saisie).
-class _StaticField extends StatelessWidget {
-  final String text;
-  final bool isHint;
-  const _StaticField({required this.text, required this.isHint});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 56,
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: PageConnexion.border),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 16,
-          color: isHint ? PageConnexion.hintGrey : PageConnexion.labelGrey,
-          letterSpacing: isHint ? 0 : 1.5,
-        ),
       ),
     );
   }

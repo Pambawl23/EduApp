@@ -358,29 +358,53 @@ class ImagePlaceholder extends StatelessWidget {
   }
 }
 
-/// Barre de navigation du bas (statique).
+
+/// Barre de navigation fonctionnelle de l'apprenant.
 class BarreNavigation extends StatelessWidget {
   final int index;
+
   const BarreNavigation({super.key, required this.index});
+
+  static const List<String> routes = [
+    '/accueil',
+    '/catalogue',
+    '/notifications',
+    '/profil',
+  ];
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: index,
-      onTap: (_) {},
+      onTap: (nouvelIndex) {
+        if (nouvelIndex == index) return;
+
+        Navigator.pushNamed(
+          context,
+          routes[nouvelIndex],
+        );
+      },
       type: BottomNavigationBarType.fixed,
       backgroundColor: Colors.white,
       selectedItemColor: Couleurs.primary,
       unselectedItemColor: Couleurs.hintGrey,
       items: const [
         BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard_outlined), label: 'Accueil'),
+          icon: Icon(Icons.dashboard_outlined),
+          label: 'Accueil',
+        ),
         BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book_outlined), label: 'Catalogue'),
+          icon: Icon(Icons.menu_book_outlined),
+          label: 'Catalogue',
+        ),
         BottomNavigationBarItem(
-            icon: Icon(Icons.notifications_none), label: 'Notifications'),
+          icon: Icon(Icons.notifications_none),
+          label: 'Notifications',
+        ),
         BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline), label: 'Profil'),
+          icon: Icon(Icons.person_outline),
+          label: 'Profil',
+        ),
       ],
     );
   }

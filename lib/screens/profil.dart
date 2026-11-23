@@ -1,3 +1,4 @@
+import 'deconnexion.dart';
 import 'package:flutter/material.dart';
 import '../widgets/commun.dart';
 
@@ -47,7 +48,27 @@ class Profil extends StatelessWidget {
               const SizedBox(height: 28),
               const BoutonPrimaire('Enregistrer les modifications'),
               const SizedBox(height: 12),
-              const BoutonContour('Se déconnecter', couleur: Couleurs.alerte),
+              SizedBox(
+                height: 48,
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const Deconnexion(),
+                      ),
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Couleurs.alerte,
+                    side: const BorderSide(color: Couleurs.alerte),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text('Se déconnecter'),
+                ),
+              ),
             ],
           ),
         ),

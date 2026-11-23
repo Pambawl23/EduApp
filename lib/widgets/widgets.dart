@@ -72,6 +72,7 @@ class AdminTabs extends StatelessWidget {
     (Icons.notifications_outlined, 'Notifications'),
   ];
 
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -87,21 +88,85 @@ class AdminTabs extends StatelessWidget {
             children: [
               for (var i = 0; i < items.length; i++)
                 Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(items[i].$1, size: 24, color: i == current ? C.primary : C.meta),
-                      const SizedBox(height: 3),
-                      Text(
-                        items[i].$2,
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: i == current ? FontWeight.w800 : FontWeight.w600,
+                  child: InkWell(
+                    onTap: () {
+                      final label = items[i].$2;
+
+                      if (label == 'Plus') {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (sheetContext) => SafeArea(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ListTile(
+                                  leading: const Icon(Icons.play_lesson_outlined),
+                                  title: const Text('Gestion des cours'),
+                                  onTap: () {
+                                    Navigator.pop(sheetContext);
+                                    Navigator.pushReplacementNamed(context, '/admin/cours');
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.category_outlined),
+                                  title: const Text('Gestion des catégories'),
+                                  onTap: () {
+                                    Navigator.pop(sheetContext);
+                                    Navigator.pushReplacementNamed(context, '/admin/categories');
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.query_stats),
+                                  title: const Text('Statistiques'),
+                                  onTap: () {
+                                    Navigator.pop(sheetContext);
+                                    Navigator.pushReplacementNamed(context, '/admin/statistiques');
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+
+                      final routes = {
+                        'Accueil': '/admin/accueil',
+                        'Formations': '/admin/formations',
+                        'Utilisateurs': '/admin/utilisateurs',
+                        'Examens': '/admin/examens',
+                        'Notifications': '/admin/notifications',
+                        'Statistiques': '/admin/accueil',
+                      };
+
+                      final route = routes[label];
+
+                      if (route != null && i != current) {
+                        Navigator.pushNamed(context, route);
+                      }
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          items[i].$1,
+                          size: 24,
                           color: i == current ? C.primary : C.meta,
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 3),
+                        Text(
+                          items[i].$2,
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: i == current
+                                ? FontWeight.w800
+                                : FontWeight.w600,
+                            color: i == current ? C.primary : C.meta,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
             ],
@@ -110,6 +175,7 @@ class AdminTabs extends StatelessWidget {
       ),
     );
   }
+
 }
 
 /* ───────────────────────── Page standard ───────────────────────── */
