@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
@@ -17,7 +20,9 @@ class GestionDesFormations extends StatelessWidget {
     return AdminPage(
       bar: const AdminBar('Gestion Des Formations', leading: Icons.menu),
       tabs: const AdminTabs(current: 1, items: AdminTabs.standard),
-      bottom: const AppButton('Créer une formation', icon: Icons.add_circle_outline),
+      bottom: AppButton('Créer une formation',
+          icon: Icons.add_circle_outline,
+          onPressed: () => context.push(AppRoutes.createFormation)),
       children: [
         const SearchBox('Rechercher une formation, un formateur...'),
         gap12,
@@ -78,7 +83,11 @@ class GestionDesFormations extends StatelessWidget {
                           if (f.$9.isNotEmpty) TextSpan(text: '  ${f.$9}', style: T.caption),
                         ])),
                       ),
-                      ActionIcons(f.$10, lastColor: null),
+                      ActionIcons(f.$10, lastColor: null, routes: const [
+                        AppRoutes.adminFormationDetails,
+                        AppRoutes.editFormation,
+                        AppRoutes.deleteFormation,
+                      ]),
                     ]),
                   ]),
                 ),

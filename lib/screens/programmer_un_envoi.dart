@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
@@ -9,9 +12,15 @@ class ProgrammerUnEnvoi extends StatelessWidget {
   Widget build(BuildContext context) {
     return AdminPage(
       bar: const AdminBar('Programmer Un Envoi', leading: Icons.chevron_left, actions: [Icons.more_vert]),
-      bottom: Column(mainAxisSize: MainAxisSize.min, children: const [
-        AppButton('Valider et programmer l\'envoi', icon: Icons.send_time_extension),
-        AppButton.secondary('Retour à l\'édition', icon: Icons.edit_note),
+      bottom: Column(mainAxisSize: MainAxisSize.min, children: [
+        AppButton('Valider et programmer l\'envoi',
+            icon: Icons.send_time_extension,
+            onPressed: () => context.go(AppRoutes.notificationConfirmation)),
+        AppButton.secondary('Retour à l\'édition',
+            icon: Icons.edit_note,
+            onPressed: () => context.canPop()
+                ? context.pop()
+                : context.go(AppRoutes.createNotification)),
       ]),
       children: [
         AppCard(

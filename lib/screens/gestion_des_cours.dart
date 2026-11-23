@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
@@ -24,7 +27,9 @@ class GestionDesCours extends StatelessWidget {
         (Icons.notifications_outlined, 'Alertes'),
         (Icons.more_horiz, 'Plus'),
       ]),
-      bottom: const AppButton('Ajouter un cours', icon: Icons.add),
+      bottom: AppButton('Ajouter un cours',
+          icon: Icons.add,
+          onPressed: () => context.push(AppRoutes.createCourse)),
       children: [
         AppCard(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -80,7 +85,15 @@ class GestionDesCours extends StatelessWidget {
                   Icon(c.$9, size: 14, color: C.meta),
                   const SizedBox(width: 4),
                   Expanded(child: Text(c.$10, style: T.caption, overflow: TextOverflow.ellipsis)),
-                  const ActionIcons([Icons.visibility_outlined, Icons.edit_outlined, Icons.delete_outline], lastColor: C.danger),
+                  const ActionIcons(
+                    [Icons.visibility_outlined, Icons.edit_outlined, Icons.delete_outline],
+                    lastColor: C.danger,
+                    routes: [
+                      AppRoutes.adminCoursePreview,
+                      AppRoutes.editCourse,
+                      AppRoutes.deleteCourse,
+                    ],
+                  ),
                 ]),
               ]),
             ),

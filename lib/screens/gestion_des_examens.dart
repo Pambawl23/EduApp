@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
@@ -35,7 +38,8 @@ class GestionDesExamens extends StatelessWidget {
         gap12,
         const FilterRow(['Tous  18', 'Publiés  14', 'Brouillons  3', 'Archivés  1']),
         gap12,
-        const AppButton('+ Créer un examen'),
+        AppButton('+ Créer un examen',
+            onPressed: () => context.push(AppRoutes.createExam)),
         gap16,
         Row(children: const [
           Expanded(child: Text('Évaluations configurées  3', style: T.h3)),
@@ -117,7 +121,15 @@ class _Exam extends StatelessWidget {
             const Icon(Icons.history, size: 14, color: C.hint),
             const SizedBox(width: 4),
             Expanded(child: Text(updated, style: T.caption)),
-            const ActionIcons([Icons.visibility_outlined, Icons.edit_outlined, Icons.delete_outline], lastColor: C.danger),
+            const ActionIcons(
+              [Icons.visibility_outlined, Icons.edit_outlined, Icons.delete_outline],
+              lastColor: C.danger,
+              routes: [
+                AppRoutes.examPreview,
+                AppRoutes.editExam,
+                null,
+              ],
+            ),
           ]),
         ]),
       ),

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
@@ -18,7 +21,9 @@ class GestionDesUtilisateurs extends StatelessWidget {
     return AdminPage(
       bar: const AdminBar('Gestion Des Utilisateurs', leading: Icons.school_outlined),
       tabs: const AdminTabs(current: 2, items: AdminTabs.users),
-      bottom: const AppButton('Créer un utilisateur', icon: Icons.person_add_outlined),
+      bottom: AppButton('Créer un utilisateur',
+          icon: Icons.person_add_outlined,
+          onPressed: () => context.push(AppRoutes.createUser)),
       children: [
         Row(children: [
           const IconBox(Icons.groups_outlined, size: 44),
@@ -56,7 +61,11 @@ class GestionDesUtilisateurs extends StatelessWidget {
                     Text(u.$5, style: const TextStyle(fontSize: 11, color: C.success, fontWeight: FontWeight.w600)),
                   ]),
                 ),
-                const ActionIcons([Icons.edit_outlined, Icons.delete_outline], lastColor: C.danger),
+                const ActionIcons(
+                  [Icons.edit_outlined, Icons.delete_outline],
+                  lastColor: C.danger,
+                  routes: [AppRoutes.editUser, AppRoutes.deleteUser],
+                ),
               ]),
             ),
           ),

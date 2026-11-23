@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../widgets/commun.dart';
 
 /// Cas d'utilisation : Passer un examen
@@ -96,11 +99,23 @@ class PasserExamen extends StatelessWidget {
               _choix('C', 'Container', false),
               _choix('D', 'SizedBox', false),
               const Spacer(),
-              const Row(
+              Row(
                 children: [
-                  Expanded(child: BoutonContour('Précédent')),
+                  Expanded(
+                    child: BoutonContour(
+                      'Précédent',
+                      onPressed: () => context.canPop()
+                          ? context.pop()
+                          : context.go(AppRoutes.activities),
+                    ),
+                  ),
                   SizedBox(width: 12),
-                  Expanded(child: BoutonPrimaire('Suivant')),
+                  Expanded(
+                    child: BoutonPrimaire(
+                      'Suivant',
+                      onPressed: () => context.go(AppRoutes.results),
+                    ),
+                  ),
                 ],
               ),
             ],

@@ -1,10 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../providers/auth_provider.dart';
-import 'tableau_de_bord.dart';
-import 'gestion_des_utilisateurs.dart';
+import '../router/app_routes.dart';
 
 class PageConnexion extends ConsumerStatefulWidget {
   const PageConnexion({super.key});
@@ -46,13 +46,13 @@ class _PageConnexionState extends ConsumerState<PageConnexion> {
 
     ref.read(authProvider.notifier).login(email, selectedRole);
 
-    final destination = selectedRole == UserRole.apprenant
-        ? const TableauDeBord()
-        : const GestionDesUtilisateurs();
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => destination),
+    final requestedLocation =
+        GoRouterState.of(context).uri.queryParameters['from'];
+    context.go(
+      requestedLocation ??
+          (selectedRole == UserRole.apprenant
+              ? AppRoutes.learnerDashboard
+              : AppRoutes.adminDashboard),
     );
   }
 
@@ -116,7 +116,7 @@ class _PageConnexionState extends ConsumerState<PageConnexion> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () => context.push(AppRoutes.forgotPassword),
                   child: const Text(
                     'Mot de passe oublié ?',
                     style: TextStyle(color: primary),
@@ -146,7 +146,7 @@ class _PageConnexionState extends ConsumerState<PageConnexion> {
               SizedBox(
                 height: 48,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () => context.push(AppRoutes.register),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: primary,
                     backgroundColor: Colors.white,

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
@@ -13,30 +16,38 @@ class StatistiquesPerformance extends StatelessWidget {
       children: [
         Row(children: [
           Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: C.border),
+            child: InkWell(
+              onTap: () => context.push(AppRoutes.statisticsPeriod),
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: C.border),
+                ),
+                child: Row(children: const [
+                  Icon(Icons.calendar_today, size: 16, color: C.primary),
+                  SizedBox(width: 8),
+                  Expanded(child: Text('30 derniers jours', style: T.title)),
+                  Icon(Icons.expand_more, color: C.meta),
+                ]),
               ),
-              child: Row(children: const [
-                Icon(Icons.calendar_today, size: 16, color: C.primary),
-                SizedBox(width: 8),
-                Expanded(child: Text('30 derniers jours', style: T.title)),
-                Icon(Icons.expand_more, color: C.meta),
-              ]),
             ),
           ),
           const SizedBox(width: 10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            decoration: BoxDecoration(color: C.primary, borderRadius: BorderRadius.circular(12)),
-            child: Row(children: const [
-              Icon(Icons.download, size: 16, color: Colors.white),
-              SizedBox(width: 6),
-              Text('Exporter', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
-            ]),
+          InkWell(
+            onTap: () => context.push(AppRoutes.exportStatistics),
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              decoration: BoxDecoration(color: C.primary, borderRadius: BorderRadius.circular(12)),
+              child: Row(children: const [
+                Icon(Icons.download, size: 16, color: Colors.white),
+                SizedBox(width: 6),
+                Text('Exporter', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+              ]),
+            ),
           ),
         ]),
         gap8,
@@ -184,7 +195,9 @@ class StatistiquesPerformance extends StatelessWidget {
           ]),
         ),
         gap16,
-        const AppButton('Générer un rapport complet', icon: Icons.picture_as_pdf_outlined),
+        AppButton('Générer un rapport complet',
+            icon: Icons.picture_as_pdf_outlined,
+            onPressed: () => context.push(AppRoutes.reportReady)),
         gap12,
         const InfoBanner('Export en cours...', icon: Icons.check_circle, kind: Kind.published),
       ],

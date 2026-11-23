@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../widgets/commun.dart';
 
 /// Cas d'utilisation : Consulter le catalogue
 class Catalogue extends StatelessWidget {
   const Catalogue({super.key});
 
-  Widget _formation(String titre, String niveau, String duree) {
-    return Carte(
+  Widget _formation(
+      BuildContext context, String titre, String niveau, String duree) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () => context.push(AppRoutes.formationDetails),
+      child: Carte(
       child: Row(
         children: [
           Container(
@@ -49,6 +56,7 @@ class Catalogue extends StatelessWidget {
           ),
         ],
       ),
+      ),
     );
   }
 
@@ -61,21 +69,24 @@ class Catalogue extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            const ChampStatique(
-              text: 'Rechercher une formation',
-              isHint: true,
-              icone: Icons.search,
+            GestureDetector(
+              onTap: () => context.push(AppRoutes.search),
+              child: const ChampStatique(
+                text: 'Rechercher une formation',
+                isHint: true,
+                icone: Icons.search,
+              ),
             ),
             const SizedBox(height: 16),
             const TitreSection('Formations disponibles'),
             const SizedBox(height: 10),
-            _formation('Développement mobile', 'Débutant', '20 h'),
+            _formation(context, 'Développement mobile', 'Débutant', '20 h'),
             const SizedBox(height: 10),
-            _formation('Bases de données', 'Intermédiaire', '15 h'),
+            _formation(context, 'Bases de données', 'Intermédiaire', '15 h'),
             const SizedBox(height: 10),
-            _formation('Réseaux informatiques', 'Débutant', '18 h'),
+            _formation(context, 'Réseaux informatiques', 'Débutant', '18 h'),
             const SizedBox(height: 10),
-            _formation('Gestion de projet', 'Avancé', '12 h'),
+            _formation(context, 'Gestion de projet', 'Avancé', '12 h'),
           ],
         ),
       ),

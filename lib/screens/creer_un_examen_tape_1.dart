@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
@@ -9,8 +12,10 @@ class CreerUnExamenEtape1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return AdminPage(
       bar: const AdminBar('Création Examen Étape 1', actions: [Icons.more_vert]),
-      bottom: Column(mainAxisSize: MainAxisSize.min, children: const [
-        AppButton('Continuer vers l\'étape 2 (Questions)', icon: Icons.arrow_forward),
+      bottom: Column(mainAxisSize: MainAxisSize.min, children: [
+        AppButton('Continuer vers l\'étape 2 (Questions)',
+            icon: Icons.arrow_forward,
+            onPressed: () => context.push(AppRoutes.createExamQuestions)),
         AppButton.secondary('Enregistrer comme brouillon', icon: Icons.bookmark_border),
       ]),
       children: [

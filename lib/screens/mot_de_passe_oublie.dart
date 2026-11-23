@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../widgets/commun.dart';
 
 /// Cas d'utilisation : Réinitialiser le mot de passe
@@ -52,9 +55,21 @@ class MotDePasseOublie extends StatelessWidget {
                 icone: Icons.mail_outline,
               ),
               const Spacer(),
-              const BoutonPrimaire('Envoyer le lien'),
+              BoutonPrimaire(
+                'Envoyer le lien',
+                onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      "L'envoi du lien sera disponible après connexion au service d'authentification.",
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 12),
-              const BoutonContour('Retour à la connexion'),
+              BoutonContour(
+                'Retour à la connexion',
+                onPressed: () => context.go(AppRoutes.login),
+              ),
             ],
           ),
         ),

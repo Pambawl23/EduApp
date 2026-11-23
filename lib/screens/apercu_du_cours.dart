@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
@@ -9,10 +12,24 @@ class ApercuDuCours extends StatelessWidget {
   Widget build(BuildContext context) {
     return AdminPage(
       bar: const AdminBar('Aperçu Du Cours'),
-      bottom: Row(children: const [
-        Expanded(child: AppButton.secondary('Précédent', icon: Icons.arrow_back)),
-        SizedBox(width: 10),
-        Expanded(child: AppButton('Suivant', icon: Icons.arrow_forward)),
+      bottom: Row(children: [
+        Expanded(
+          child: AppButton.secondary(
+            'Précédent',
+            icon: Icons.arrow_back,
+            onPressed: () => context.canPop()
+                ? context.pop()
+                : context.go(AppRoutes.catalogue),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: AppButton(
+            'Suivant',
+            icon: Icons.arrow_forward,
+            onPressed: () => context.push(AppRoutes.readCourse),
+          ),
+        ),
       ]),
       children: [
         const InfoBanner('Vue simulée pour validation pédagogique',

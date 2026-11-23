@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
@@ -25,7 +28,9 @@ class GestionDesCategories extends StatelessWidget {
     return AdminPage(
       bar: const AdminBar('Formations Et Catégories', leading: Icons.menu),
       tabs: const AdminTabs(current: 1, items: AdminTabs.standard),
-      bottom: const AppButton.secondary('Créer une catégorie', icon: Icons.add_circle_outline),
+      bottom: AppButton.secondary('Créer une catégorie',
+          icon: Icons.add_circle_outline,
+          onPressed: () => context.push(AppRoutes.createCategory)),
       children: [
         AppCard(
           child: Row(children: [
@@ -65,7 +70,11 @@ class GestionDesCategories extends StatelessWidget {
                       Text('ID : ${c.$3}', style: T.caption),
                     ]),
                   ),
-                  const ActionIcons([Icons.edit_outlined, Icons.delete_outline], lastColor: C.danger),
+                  const ActionIcons(
+                    [Icons.edit_outlined, Icons.delete_outline],
+                    lastColor: C.danger,
+                    routes: [AppRoutes.editCategory, AppRoutes.deleteCategory],
+                  ),
                 ]),
                 gap12,
                 Text(c.$4, style: T.bodySm),

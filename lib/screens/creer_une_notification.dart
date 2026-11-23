@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
@@ -9,8 +12,10 @@ class CreerUneNotification extends StatelessWidget {
   Widget build(BuildContext context) {
     return AdminPage(
       bar: const AdminBar('Nouvelle Notification', leading: Icons.chevron_left, actions: [Icons.more_vert]),
-      bottom: Column(mainAxisSize: MainAxisSize.min, children: const [
-        AppButton('Continuer vers la planification', icon: Icons.arrow_forward),
+      bottom: Column(mainAxisSize: MainAxisSize.min, children: [
+        AppButton('Continuer vers la planification',
+            icon: Icons.arrow_forward,
+            onPressed: () => context.push(AppRoutes.scheduleNotification)),
         AppButton.secondary('Enregistrer comme brouillon', icon: Icons.bookmark_border),
       ]),
       children: [

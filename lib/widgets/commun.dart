@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 
 /// Couleurs de EduApp (les mêmes que accueil.dart et page_connexion.dart).
 class Couleurs {
@@ -94,7 +97,8 @@ class ChampStatique extends StatelessWidget {
 /// Bouton plein bleu.
 class BoutonPrimaire extends StatelessWidget {
   final String label;
-  const BoutonPrimaire(this.label, {super.key});
+  final VoidCallback? onPressed;
+  const BoutonPrimaire(this.label, {this.onPressed, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +106,7 @@ class BoutonPrimaire extends StatelessWidget {
       height: 48,
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: Couleurs.primary,
           foregroundColor: Colors.white,
@@ -124,7 +128,9 @@ class BoutonPrimaire extends StatelessWidget {
 class BoutonContour extends StatelessWidget {
   final String label;
   final Color couleur;
-  const BoutonContour(this.label, {super.key, this.couleur = Couleurs.primary});
+  final VoidCallback? onPressed;
+  const BoutonContour(this.label,
+      {super.key, this.couleur = Couleurs.primary, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +138,7 @@ class BoutonContour extends StatelessWidget {
       height: 48,
       width: double.infinity,
       child: OutlinedButton(
-        onPressed: () {},
+        onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           foregroundColor: couleur,
           backgroundColor: Colors.white,
@@ -286,50 +292,56 @@ class LigneActivite extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Carte(
-      child: Row(
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: Couleurs.primaryClair,
-              borderRadius: BorderRadius.circular(10),
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () => context.push(
+        estExamen ? AppRoutes.takeExam : AppRoutes.coursePreview,
+      ),
+      child: Carte(
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: Couleurs.primaryClair,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                estExamen ? Icons.quiz_outlined : Icons.menu_book_outlined,
+                color: Couleurs.primary,
+              ),
             ),
-            child: Icon(
-              estExamen ? Icons.quiz_outlined : Icons.menu_book_outlined,
-              color: Couleurs.primary,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  titre,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: Couleurs.textDark,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    titre,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: Couleurs.textDark,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '$formation • $echeance',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Couleurs.textGrey,
+                  const SizedBox(height: 2),
+                  Text(
+                    '$formation • $echeance',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Couleurs.textGrey,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Pastille(
-            estExamen ? 'Examen' : 'Cours',
-            couleur: estExamen ? Couleurs.attention : Couleurs.primary,
-          ),
-        ],
+            Pastille(
+              estExamen ? 'Examen' : 'Cours',
+              couleur: estExamen ? Couleurs.attention : Couleurs.primary,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -366,10 +378,10 @@ class BarreNavigation extends StatelessWidget {
   const BarreNavigation({super.key, required this.index});
 
   static const List<String> routes = [
-    '/accueil',
-    '/catalogue',
-    '/notifications',
-    '/profil',
+    AppRoutes.learnerDashboard,
+    AppRoutes.catalogue,
+    AppRoutes.notifications,
+    AppRoutes.profile,
   ];
 
   @override
@@ -379,10 +391,7 @@ class BarreNavigation extends StatelessWidget {
       onTap: (nouvelIndex) {
         if (nouvelIndex == index) return;
 
-        Navigator.pushNamed(
-          context,
-          routes[nouvelIndex],
-        );
+        context.go(routes[nouvelIndex]);
       },
       type: BottomNavigationBarType.fixed,
       backgroundColor: Colors.white,

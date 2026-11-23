@@ -1,10 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../providers/auth_provider.dart';
+import '../router/app_routes.dart';
 import '../widgets/commun.dart';
-import 'page_connexion.dart';
 
 class Deconnexion extends ConsumerWidget {
   const Deconnexion({super.key});
@@ -63,13 +64,7 @@ class Deconnexion extends ConsumerWidget {
                       onPressed: () {
                         ref.read(authProvider.notifier).logout();
 
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const PageConnexion(),
-                          ),
-                              (route) => false,
-                        );
+                        context.go(AppRoutes.login);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Couleurs.alerte,
@@ -86,7 +81,18 @@ class Deconnexion extends ConsumerWidget {
                     width: double.infinity,
                     height: 48,
                     child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        if (context.canPop()) {
+                          context.pop();
+                        } else {
+                          final role = ref.read(authProvider).role;
+                          context.go(
+                            role == UserRole.administrateur
+                                ? AppRoutes.adminDashboard
+                                : AppRoutes.learnerDashboard,
+                          );
+                        }
+                      },
                       child: const Text('Annuler'),
                     ),
                   ),

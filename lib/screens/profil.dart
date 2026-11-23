@@ -1,5 +1,7 @@
-import 'deconnexion.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../widgets/commun.dart';
 
 /// Cas d'utilisation : Modifier son profil
@@ -52,12 +54,7 @@ class Profil extends StatelessWidget {
                 height: 48,
                 child: OutlinedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const Deconnexion(),
-                      ),
-                    );
+                    context.push(AppRoutes.logout);
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Couleurs.alerte,

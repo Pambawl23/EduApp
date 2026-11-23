@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../router/app_routes.dart';
 import '../theme/app_theme.dart';
 
 /* ───────────────────────── Barre du haut ───────────────────────── */
@@ -23,7 +25,13 @@ class AdminBar extends StatelessWidget implements PreferredSizeWidget {
           ? null
           : IconButton(
               icon: Icon(leading, size: 24),
-              onPressed: () => Navigator.maybePop(context),
+              onPressed: () {
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  context.go(AppRoutes.adminDashboard);
+                }
+              },
             ),
       actions: [
         for (final a in actions) IconButton(icon: Icon(a, size: 24), onPressed: () {}),
@@ -104,7 +112,7 @@ class AdminTabs extends StatelessWidget {
                                   title: const Text('Gestion des cours'),
                                   onTap: () {
                                     Navigator.pop(sheetContext);
-                                    Navigator.pushReplacementNamed(context, '/admin/cours');
+                                    context.go(AppRoutes.adminCourses);
                                   },
                                 ),
                                 ListTile(
@@ -112,7 +120,7 @@ class AdminTabs extends StatelessWidget {
                                   title: const Text('Gestion des catégories'),
                                   onTap: () {
                                     Navigator.pop(sheetContext);
-                                    Navigator.pushReplacementNamed(context, '/admin/categories');
+                                    context.go(AppRoutes.adminCategories);
                                   },
                                 ),
                                 ListTile(
@@ -120,7 +128,7 @@ class AdminTabs extends StatelessWidget {
                                   title: const Text('Statistiques'),
                                   onTap: () {
                                     Navigator.pop(sheetContext);
-                                    Navigator.pushReplacementNamed(context, '/admin/statistiques');
+                                    context.go(AppRoutes.adminStatistics);
                                   },
                                 ),
                               ],
@@ -131,18 +139,18 @@ class AdminTabs extends StatelessWidget {
                       }
 
                       final routes = {
-                        'Accueil': '/admin/accueil',
-                        'Formations': '/admin/formations',
-                        'Utilisateurs': '/admin/utilisateurs',
-                        'Examens': '/admin/examens',
-                        'Notifications': '/admin/notifications',
-                        'Statistiques': '/admin/accueil',
+                        'Accueil': AppRoutes.adminDashboard,
+                        'Formations': AppRoutes.adminFormations,
+                        'Utilisateurs': AppRoutes.adminUsers,
+                        'Examens': AppRoutes.adminExams,
+                        'Notifications': AppRoutes.adminNotifications,
+                        'Statistiques': AppRoutes.adminStatistics,
                       };
 
                       final route = routes[label];
 
                       if (route != null && i != current) {
-                        Navigator.pushNamed(context, route);
+                        context.go(route);
                       }
                     },
                     child: Column(
@@ -540,10 +548,11 @@ class AppButton extends StatelessWidget {
   final String label;
   final IconData? icon;
   final BtnKind kind;
-  const AppButton(this.label, {this.icon, this.kind = BtnKind.primary, super.key});
-  const AppButton.secondary(this.label, {this.icon, super.key}) : kind = BtnKind.secondary;
-  const AppButton.danger(this.label, {this.icon, super.key}) : kind = BtnKind.danger;
-  const AppButton.text(this.label, {this.icon, super.key}) : kind = BtnKind.text;
+  final VoidCallback? onPressed;
+  const AppButton(this.label, {this.icon, this.kind = BtnKind.primary, this.onPressed, super.key});
+  const AppButton.secondary(this.label, {this.icon, this.onPressed, super.key}) : kind = BtnKind.secondary;
+  const AppButton.danger(this.label, {this.icon, this.onPressed, super.key}) : kind = BtnKind.danger;
+  const AppButton.text(this.label, {this.icon, this.onPressed, super.key}) : kind = BtnKind.text;
 
   @override
   Widget build(BuildContext context) {
@@ -566,7 +575,7 @@ class AppButton extends StatelessWidget {
       width: double.infinity,
       height: kind == BtnKind.text ? 44 : 56,
       child: TextButton(
-        onPressed: () {},
+        onPressed: onPressed,
         style: TextButton.styleFrom(
           backgroundColor: bg,
           foregroundColor: fg,
@@ -766,15 +775,34 @@ class AdminRow extends StatelessWidget {
 class ActionIcons extends StatelessWidget {
   final List<IconData> icons;
   final Color? lastColor;
-  const ActionIcons(this.icons, {this.lastColor, super.key});
+  final List<String?> routes;
+  const ActionIcons(this.icons,
+      {this.lastColor, this.routes = const [], super.key});
+
+  Widget _button(BuildContext context, int index) {
+    final route = index < routes.length ? routes[index] : null;
+    return IconButton(
+      onPressed: route == null ? null : () => context.push(route),
+      padding: const EdgeInsets.all(6),
+      constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+      visualDensity: VisualDensity.compact,
+      icon: Icon(
+        icons[index],
+        size: 20,
+        color: index == icons.length - 1 && lastColor != null
+            ? lastColor
+            : C.meta,
+      ),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) => Row(mainAxisSize: MainAxisSize.min, children: [
-        for (var i = 0; i < icons.length; i++)
-          Padding(
-            padding: const EdgeInsets.only(left: 14),
-            child: Icon(icons[i], size: 20, color: i == icons.length - 1 && lastColor != null ? lastColor : C.meta),
-          ),
-      ]);
+  Widget build(BuildContext context) => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (var i = 0; i < icons.length; i++) _button(context, i),
+        ],
+      );
 }
 
 /* ───────────────────────── Écran de confirmation (modale) ───────────────────────── */

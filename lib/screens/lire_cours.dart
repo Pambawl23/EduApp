@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../widgets/commun.dart';
 
 /// Cas d'utilisation : Lire un cours
@@ -49,11 +52,23 @@ class LireCours extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              const Row(
+              Row(
                 children: [
-                  Expanded(child: BoutonContour('Précédent')),
+                  Expanded(
+                    child: BoutonContour(
+                      'Précédent',
+                      onPressed: () => context.canPop()
+                          ? context.pop()
+                          : context.go(AppRoutes.catalogue),
+                    ),
+                  ),
                   SizedBox(width: 12),
-                  Expanded(child: BoutonPrimaire('Suivant')),
+                  Expanded(
+                    child: BoutonPrimaire(
+                      'Suivant',
+                      onPressed: () => context.go(AppRoutes.learnerDashboard),
+                    ),
+                  ),
                 ],
               ),
             ],

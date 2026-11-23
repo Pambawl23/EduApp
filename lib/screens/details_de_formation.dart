@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
@@ -9,8 +12,12 @@ class DetailsDeFormation extends StatelessWidget {
   Widget build(BuildContext context) {
     return AdminPage(
       bar: const AdminBar('Détails De Formation'),
-      bottom: Row(children: const [
-        Expanded(flex: 3, child: AppButton('Modifier la formation', icon: Icons.edit_outlined)),
+      bottom: Row(children: [
+        Expanded(
+            flex: 3,
+            child: AppButton('Modifier la formation',
+                icon: Icons.edit_outlined,
+                onPressed: () => context.push(AppRoutes.editFormation))),
         SizedBox(width: 10),
         Expanded(flex: 2, child: AppButton.secondary('Options', icon: Icons.tune)),
       ]),

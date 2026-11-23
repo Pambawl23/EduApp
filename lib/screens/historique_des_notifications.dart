@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
@@ -10,7 +13,9 @@ class HistoriqueDesNotifications extends StatelessWidget {
     return AdminPage(
       bar: const AdminBar('Notifications', leading: Icons.school_outlined, actions: [Icons.search, Icons.filter_list]),
       tabs: const AdminTabs(current: 3, items: AdminTabs.standard),
-      bottom: const AppButton('Nouvelle notification', icon: Icons.add_circle_outline),
+      bottom: AppButton('Nouvelle notification',
+          icon: Icons.add_circle_outline,
+          onPressed: () => context.push(AppRoutes.createNotification)),
       children: [
         AppCard(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -39,25 +44,33 @@ class HistoriqueDesNotifications extends StatelessWidget {
           icon: Icons.info_outline, type: 'Info', date: '14 Mai • 10:30', status: 'Envoyée', kind: Kind.sent,
           title: 'Nouvel examen certifiant disponible !', targetIcon: Icons.school_outlined,
           target: 'Formation Web Fullstack (#FORM-WEB-01)', l1: '312 destinataires', l2: 'Taux de lecture : 88%',
-          footer: 'Canal : Push & In-App', actions: [Icons.content_copy, Icons.visibility_outlined],
+          footer: 'Canal : Push & In-App',
+          actions: [Icons.content_copy, Icons.visibility_outlined],
+          routes: [null, AppRoutes.adminNotificationDetails],
         ),
         const _Notif(
           icon: Icons.alarm, type: 'Rappel', date: '12 Mai • 08:00', status: 'Envoyée', kind: Kind.sent,
           title: 'Rappel : Clôture de l\'examen TypeScript ce soir', targetIcon: Icons.groups_outlined,
           target: 'Tous les apprenants actifs', l1: '3 828 destinataires', l2: 'Taux de lecture : 94%',
-          footer: 'Canal : Push Urgent', actions: [Icons.content_copy, Icons.visibility_outlined],
+          footer: 'Canal : Push Urgent',
+          actions: [Icons.content_copy, Icons.visibility_outlined],
+          routes: [null, AppRoutes.adminNotificationDetails],
         ),
         const _Notif(
           icon: Icons.warning_amber_rounded, type: 'Alerte', date: 'Dans 6 jours', status: 'Planifiée', kind: Kind.scheduled,
           title: 'Maintenance programmée de la plateforme', targetIcon: Icons.public,
           target: 'Tous les utilisateurs plateforme', l1: 'Prévue le 20 Mai à 23:00', l2: 'Cible estimée : 3 842 utilisateurs',
-          footer: 'Déclencheur automatique', actions: [Icons.edit_outlined, Icons.more_vert],
+          footer: 'Déclencheur automatique',
+          actions: [Icons.edit_outlined, Icons.more_vert],
+          routes: [AppRoutes.scheduleNotification, AppRoutes.adminNotificationDetails],
         ),
         const _Notif(
           icon: Icons.drafts_outlined, type: 'Info', date: 'Modifié hier', status: 'Brouillon', kind: Kind.draft,
           title: 'Bienvenue dans le cursus Cloud DevOps', targetIcon: Icons.person_outline,
           target: 'Sophie Martin (Apprenante individuelle)', l1: 'Contenu rédigé à 85%', l2: 'En attente de validation',
-          footer: 'Non diffusée', actions: [Icons.delete_outline, Icons.edit_note],
+          footer: 'Non diffusée',
+          actions: [Icons.delete_outline, Icons.edit_note],
+          routes: [null, AppRoutes.createNotification],
         ),
       ],
     );
@@ -80,10 +93,12 @@ class _Notif extends StatelessWidget {
   final String type, date, status, title, target, l1, l2, footer;
   final Kind kind;
   final List<IconData> actions;
+  final List<String?> routes;
   const _Notif({
     required this.icon, required this.type, required this.date, required this.status, required this.kind,
     required this.title, required this.targetIcon, required this.target, required this.l1, required this.l2,
     required this.footer, required this.actions,
+    this.routes = const [],
   });
 
   @override
@@ -117,7 +132,7 @@ class _Notif extends StatelessWidget {
             const Divider(height: 24, color: C.divider),
             Row(children: [
               Expanded(child: Text(footer, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: C.primary))),
-              ActionIcons(actions),
+              ActionIcons(actions, routes: routes),
             ]),
           ]),
         ),

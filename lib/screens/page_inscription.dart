@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../widgets/commun.dart';
 
 /// Cas d'utilisation : S'inscrire
@@ -14,7 +17,7 @@ class PageInscription extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: const [
+            children: [
               EtiquetteChamp('NOM'),
               SizedBox(height: 8),
               ChampStatique(text: 'Votre nom', isHint: true),
@@ -35,9 +38,21 @@ class PageInscription extends StatelessWidget {
               SizedBox(height: 8),
               ChampStatique(text: '••••••••'),
               SizedBox(height: 32),
-              BoutonPrimaire("S'inscrire"),
+              BoutonPrimaire(
+                "S'inscrire",
+                onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'La création de compte sera bientôt disponible.',
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(height: 12),
-              BoutonContour('Retour à la connexion'),
+              BoutonContour(
+                'Retour à la connexion',
+                onPressed: () => context.go(AppRoutes.login),
+              ),
             ],
           ),
         ),

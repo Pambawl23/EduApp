@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
@@ -17,9 +20,15 @@ class CreerUnExamenEtape2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return AdminPage(
       bar: const AdminBar('Création Examen Étape 2', actions: [Icons.more_vert]),
-      bottom: Column(mainAxisSize: MainAxisSize.min, children: const [
-        AppButton('Publier l\'examen certifiant', icon: Icons.verified_outlined),
-        AppButton.secondary('Précédent (Étape 1)', icon: Icons.arrow_back),
+      bottom: Column(mainAxisSize: MainAxisSize.min, children: [
+        AppButton('Publier l\'examen certifiant',
+            icon: Icons.verified_outlined,
+            onPressed: () => context.push(AppRoutes.examPreview)),
+        AppButton.secondary('Précédent (Étape 1)',
+            icon: Icons.arrow_back,
+            onPressed: () => context.canPop()
+                ? context.pop()
+                : context.go(AppRoutes.adminExams)),
       ]),
       children: [
         Row(children: const [

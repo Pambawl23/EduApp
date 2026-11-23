@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
@@ -17,12 +20,30 @@ class ApercuDeLExamen extends StatelessWidget {
     return AdminPage(
       bar: const AdminBar('Aperçu Et Validation Examen', actions: [Icons.more_vert]),
       bottom: Column(mainAxisSize: MainAxisSize.min, children: [
-        Row(children: const [
-          Expanded(child: AppButton.secondary('Précédente', icon: Icons.arrow_back)),
-          SizedBox(width: 10),
-          Expanded(child: AppButton('Suivante', icon: Icons.arrow_forward)),
+        Row(children: [
+          Expanded(
+            child: AppButton.secondary(
+              'Précédente',
+              icon: Icons.arrow_back,
+              onPressed: () => context.canPop()
+                  ? context.pop()
+                  : context.go(AppRoutes.adminExams),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: AppButton(
+              'Suivante',
+              icon: Icons.arrow_forward,
+              onPressed: () => context.go(AppRoutes.adminExams),
+            ),
+          ),
         ]),
-        const AppButton.secondary('Terminer et soumettre l\'examen', icon: Icons.task_alt),
+        AppButton.secondary(
+          'Terminer et soumettre l\'examen',
+          icon: Icons.task_alt,
+          onPressed: () => context.go(AppRoutes.adminExams),
+        ),
       ]),
       children: [
         const InfoBanner('• Sans impact sur les statistiques', icon: Icons.visibility_outlined, title: 'Mode Simulation Apprenant'),
